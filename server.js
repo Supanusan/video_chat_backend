@@ -11,7 +11,7 @@ const server = http.createServer(app);
 // Allow frontend connection
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || ["http://localhost:3000", "http://127.0.0.1:3000"],
+    origin: process.env.CLIENT_URL || ["http://localhost:3000", "http://127.0.0.1:3000", "https://video-chat-frontend-pi.vercel.app"],
     methods: ["GET", "POST"],
     credentials: true,
   }
@@ -19,8 +19,8 @@ const io = new Server(server, {
 
 // Middleware
 app.use(cors({
-    origin: process.env.CLIENT_URL || ["http://localhost:3000", "http://127.0.0.1:3000"],
-    credentials: true,
+  origin: process.env.CLIENT_URL || ["http://localhost:3000", "http://127.0.0.1:3000", "https://video-chat-frontend-pi.vercel.app"],
+  credentials: true,
 }));
 app.use(express.json());
 
@@ -48,7 +48,7 @@ io.on('connection', (socket) => {
   socket.on('join-queue', () => {
     // Ignore if user is already in the waiting list
     if (waitingUsers.some(s => s.id === socket.id)) {
-       return;
+      return;
     }
 
     // Find a valid partner
@@ -57,7 +57,7 @@ io.on('connection', (socket) => {
       const potentialPartner = waitingUsers.shift();
       if (potentialPartner.connected && potentialPartner.id !== socket.id) {
         partner = potentialPartner;
-        break; 
+        break;
       }
     }
 
@@ -73,7 +73,7 @@ io.on('connection', (socket) => {
       // We assign roles: one must be Initiator (creates Offer)
       socket.emit('match-found', { partnerId: partner.id, roomId, isInitiator: true });
       partner.emit('match-found', { partnerId: socket.id, roomId, isInitiator: false });
-      
+
       console.log(`Matched ${socket.id} with ${partner.id} in ${roomId}`);
       broadcastStats();
     } else {
@@ -123,7 +123,7 @@ io.on('connection', (socket) => {
     if (index !== -1) {
       waitingUsers.splice(index, 1);
     }
-    
+
     // If they were in a room, notify partner
     for (const room of socket.rooms) {
       if (room !== socket.id) {
