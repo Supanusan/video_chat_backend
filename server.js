@@ -11,7 +11,7 @@ const server = http.createServer(app);
 // Allow frontend connection
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || ["http://localhost:3000", "http://127.0.0.1:3000", "https://video-chat-frontend-pi.vercel.app"],
+    origin:["http://localhost:3000","https://video-chat-frontend-pi.vercel.app","http://127.0.0.1:3000", "https://video-chat-frontend-pi.vercel.app"],
     methods: ["GET", "POST"],
     credentials: true,
   }
