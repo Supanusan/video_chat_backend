@@ -140,6 +140,7 @@ io.on('connection', (socket) => {
 //   .catch(err => console.error('MongoDB error:', err));
 
 const PORT = process.env.PORT || 3001;
-server.listen(PORT, () => {
+// ✅ Fixed
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`Server listening on port ${PORT}`);
 });
